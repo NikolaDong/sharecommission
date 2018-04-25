@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>分享海报</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+    <meta name="keywords" content="邀请好友投保，不仅能赚高额佣金，还给亲人朋友带去一份爱的保障">
+    <meta name="description" content="邀请好友投保，不仅能赚高额佣金，还给亲人朋友带去一份爱的保障">
+    <meta name="applicable-device" content="mobile">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <link rel="shortcut icon" href="images/ANYI_LOGO.jpg">
+    <link rel="stylesheet" type="text/css" href="css/base_wap.css"/>
+    <link rel="stylesheet" type="text/css" href="css/swiper.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/product.css"/>
+
+    <script src="http://sso.test.anyi-tech.com/ws_sso/auth/setCookie"></script>
+    <script>
+        var _mtac = {"performanceMonitor":1,"senseQuery":1};
+        (function() {
+            var mta = document.createElement("script");
+            mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.4";
+            mta.setAttribute("name", "MTAH5");
+            mta.setAttribute("sid", "500545841");
+            mta.setAttribute("cid", "500545842");
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(mta, s);
+        })();
+    </script>
+</head>
+<body>
+<div class="popmask"></div>
+<div class="ajax-loading"></div>
+<!--share-->
+<aside class="share-tips">点击右上角，分享给朋友一起赚</aside>
+
+<section class="sharecommission">
+    <div id="qrcodeCanvas" style="display: none"></div>
+    <div class="updata-img" style="display: none"></div>
+    <div class="canvas_box" style="position:relative;width: 100%;overflow: hidden;">
+        <div class="tips-mask">
+            <a href="javascript:;" class="share-tips-btn share"><i></i>分享链接</a>
+            <a href="javascript:;" class="share-tips-btn download"><i></i>保存图片</a>
+        </div>
+        <div class="ultimately-img"></div>
+    </div>
+</section>
+
+</body>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/swiper.min.js"></script>
+<script type="text/javascript" src="js/mediaFize.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/auth.js"></script>
+<script type="text/javascript" src="js/share.js"></script>
+<script type="text/javascript" src="js/product.js"></script>
+
+<!--生成海报-->
+<script type="text/javascript" src="js/jquery.qrcode.js"></script>
+<!--<script type="text/javascript" src="js/qrcode.js"></script>-->
+<!--<script type="text/javascript" src="js/utf.js"></script>-->
+<script>
+    var cookData_user_id = CookiesInfo.get('user_id') || anyi.auth.user.user_id;
+    //生成分享url
+    var sharecode = urlHrefObject.sharecode || '0';
+    var ewmurl;
+    var ewm_X = 0.185, ewm_Y = 0.847;
+    if(sharecode == '0'){
+        ewmurl = window.location.origin + '/activity/sharecommission/index.html' + '?parent_id=' + cookData_user_id;
+    } else{
+        ewmurl = window.location.origin + '/activity/product/'+ urlHrefObject.productid +'/index.html' + '?parent_id=' + cookData_user_id;
+    }
+
+    shorturl(function(erweima){
+        jQuery('#qrcodeCanvas').qrcode({
+            render: "canvas",
+            text: erweima,
+            width: "200",               //二维码的宽度
+            height: "200",              //二维码的高度
+            background: "#ffffff",       //二维码的后景色
+            foreground: "#000000"        //二维码的前景色
+        });
+        saveImageInfo("#qrcodeCanvas", ".updata-img");
+
+        hechen();
+        MtaH5.clickStat("100" + sharecode);
+    }, ewmurl);
+
+    //基于屏幕大小  创建canvas
+    var winWidth = $(window).width(), winHeight = $(window).height();
+    $('.canvas_box').append('<canvas id="canvasid" width="'+ winWidth*2 +'" height="'+ winHeight*2 +'" style="width:'+ winWidth +'px;height: '+ winHeight +'px;display: none;"></canvas>');
+
+    //canves 生成海报
+    function hechen(img){
+        var ratio = 2;
+        var mainCtx = getCanvasContext('canvasid');
+        mainCtx.clearRect(0,0,1000,1000);
+        //因为没法直接读取本地图片 所以做了这部操作
+        var starImg = new Image();
+        starImg.crossOrigin="anonymous";
+        starImg.src='images/poster_ewm_'+ sharecode +'.jpg';
+        starImg.onload=function(){
+            //先把图片绘制在这里
+            mainCtx.drawImage(starImg,0,0,winWidth*ratio,winHeight*ratio);
+            //第二张图片
+            var _imagetext = new Image();
+            _imagetext.crossOrigin="anonymous";
+            _imagetext.src =$('.updata-img img').attr('src');
+            _imagetext.onload =function(){
+                mainCtx.save(); // 保存当前_context的状态
+                mainCtx.drawImage(_imagetext, winWidth*ewm_X*ratio, winHeight*ewm_Y*ratio, winWidth*0.2*ratio, winWidth*0.2*ratio);
+                saveImageInfo('.canvas_box', '.ultimately-img');
+            };
+        };
+    }
+    function getCanvasContext(id){
+        return document.getElementById(id).getContext("2d");
+    }
+    function saveImageInfo(id, img) {
+        var mycanvas = $(id);
+        var image = mycanvas.find('canvas')[0].toDataURL("image/jpg");
+        $(img).html('<img class="share-mycode" src="' + image + '" alt="from canvas"/>');
+    }
+
+    /**
+     * 新浪短链接生成
+     * */
+    function shorturl(callback, long_url){
+        $('.ajax-loading').show();
+        var apiUrl = hostsUrl2 + '/ws_activity/haoyoutuijian/get_short';
+        $.ajax(apiUrl, {
+            type: 'post',
+            data: {
+                'url': long_url
+            },
+            dataType: 'json',
+            success: function(data) {
+                $('.ajax-loading').hide();
+                if(data.cord == '0'){
+                    callback(data.data);
+                } else{
+                    showMaskEditCom({
+                        text: data.msg,
+                        duration: 1500
+                    });
+                    callback(long_url);
+                }
+            }
+        });
+    }
+
+    $('.tips-mask').on('click', '.share-tips-btn', function(){
+        if($(this).hasClass('share')){
+            $('.share-tips').show();
+            $('.popmask').show();
+        } else{
+            showMaskEditCom({
+                text: '<p class="ed_mask" style="font-size: .18rem;">长按海报保存 或发送给朋友</p>',
+                duration: 2500
+            });
+        }
+    });
+    $('.share-tips, .popmask').on('click', function(){
+        $('.share-tips, .popmask').hide();
+    });
+
+</script>
+
+<!--微信分享-->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/share.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var share_user_id = CookiesInfo.get('user_id') || anyi.auth.user.user_id;
+    var share_user_id_url = share_user_id ? '?parent_id=' + share_user_id : '';
+    var share_nickname = anyi.auth.user.nickname || JSON.parse(decodeURIComponent(CookiesInfo.get('wxuserinfoDecode'))).nickname;
+    var share_title = '好友正在风险管家签单赚佣金，线上时代已经到来，你还在犹豫吗?';
+    var share_desc = '打破传统保险推广方法，让你更快速，更便捷的签单，百万年薪不是梦';
+
+    var wx_share_url = 'sharecommission';
+    if(sharecode == '0'){
+        wx_share_url = 'sharecommission';
+        share_title = share_nickname + '正在风险管家签单赚佣金，线上时代已经到来，你还在犹豫吗?';
+    } else if(sharecode == '1'){
+        wx_share_url = 'product/ALIC20170801001';
+        share_title = share_nickname + '推荐您安联臻爱高额医疗保险，每天0.3元搞定百万保额（可续保至80岁）';
+        share_desc = '高额医疗保障，低致0.3元起一天';
+        $('.share-tips').text('点击右上角，推荐给好友吧');
+    } else if(sharecode == '2'){
+        wx_share_url = 'product/PINGAN20170915001';
+        share_title = share_nickname + '推荐您平安金色夕阳，全面保障老年生活';
+        share_desc = '60-80岁均能投保，骨折，走失，意外伤害均有保障';
+        $('.share-tips').text('点击右上角，推荐给好友吧');
+    } else if(sharecode == '3'){
+        wx_share_url = 'product/PINGAN20170913001';
+        share_title = share_nickname + '推荐您平安“要爱我”母婴计划，生前一天都能投的母婴保险';
+        share_desc = '孕妇人生意外保障10万元，24小时孕期医学电话咨询服务，体贴您的孕期生活';
+        $('.share-tips').text('点击右上角，推荐给好友吧');
+    } else if(sharecode == '4'){
+        wx_share_url = 'product/YOAIC20170822001';
+        share_title = share_nickname + '推荐您基鼎会老人险，投保年龄最高至75岁的老年医疗险';
+        share_desc = '住院赔付比例90%，每年理赔限额高达35万元起';
+        $('.share-tips').text('点击右上角，推荐给好友吧');
+    } else if(sharecode == '5'){
+        wx_share_url = 'product/TKIC20170801001';
+        share_title = share_nickname + '推荐您泰康在线综合意外险，保障人生意外+意外医疗';
+        share_desc = '理赔门槛低，费用低至每天0.16元';
+        $('.share-tips').text('点击右上角，推荐给好友吧');
+    }
+
+    anyi.weixin.share({
+        title: share_title,
+        desc: share_desc,
+        type: "link",
+        link: window.location.origin + '/activity/'+ wx_share_url +'/index.html' + share_user_id_url,
+        imgUrl: window.location.origin +'/activity/sharecommission/images/share_icon_'+ sharecode +'.png',
+        dataUrl: "",
+        success: function () {
+            MtaH5.clickStat("110" + sharecode);
+        },
+        cancel: function () {
+        }
+    });
+</script>
+</html>

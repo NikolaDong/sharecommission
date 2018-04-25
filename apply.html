@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>注册成为小管家，轻松赚钱领红包</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+    <meta name="keywords" content="5秒注册，百万佣金随手赚，还能享受体检、寻医问诊等特权服务">
+    <meta name="description" content="5秒注册，百万佣金随手赚，还能享受体检、寻医问诊等特权服务">
+    <meta name="applicable-device" content="mobile">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <link rel="shortcut icon" href="images/ANYI_LOGO.jpg">
+    <link rel="stylesheet" type="text/css" href="css/base_wap.css"/>
+    <link rel="stylesheet" type="text/css" href="css/product.css"/>
+
+    <script src="http://sso.test.anyi-tech.com/ws_sso/auth/setCookie"></script>
+    <script>
+        var _mtac = {"performanceMonitor":1,"senseQuery":1};
+        (function() {
+            var mta = document.createElement("script");
+            mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.4";
+            mta.setAttribute("name", "MTAH5");
+            mta.setAttribute("sid", "500545841");
+            mta.setAttribute("cid", "500545842");
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(mta, s);
+        })();
+    </script>
+</head>
+<body>
+<div class="popmask"></div>
+<div class="ajax-loading"></div>
+
+<section class="sharecommission">
+    <div class="banner"><img src="images/apply-banner.jpg" /></div>
+
+    <div class="apply-form">
+        <!--<img src="images/apply-banner2.jpg"/>-->
+        <div class="form-box">
+            <div class="transparent-bg"></div>
+            <form>
+                <div class="coment-box"><div class="apply-input"><input type="tel" name="mobile" class="mobile" id="mobile" placeholder="请输入手机号码" maxlength="11" /></div></div>
+                <div class="coment-box code clearfix"><div class="apply-input fl"><input type="text" name="code" class="code" id="code" placeholder="请输入图形验证码" maxlength="4" /></div><a class="code-btn fr" href="javascript:;" onclick="codeFun();"><div class="code-svg"></div></a></div>
+                <div class="coment-box code clearfix"><div class="apply-input fl"><input type="tel" name="verify" class="verify" id="verify" placeholder="请输入短信验证码" maxlength="4" /></div><a class="verify-btn send-btn on fl" href="javascript:;">获取验证码</a></div>
+                <a class="submit-btn draw-insurance-btn submit-btn-apply" href="javascript:;" onclick="MtaH5.clickStat('5')">立即参加</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="list-rolling">
+        <div class="list-box">
+            <div class="transparent-bg"></div>
+            <div class="list-comment">
+                <h3>看看大家奖励</h3>
+                <div class="list-silder apply-list">
+                    <ul>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <p class="record-text">风险管家互联网保险经纪</p>
+    </div>
+</section>
+
+</body>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/swiper.min.js"></script>
+<script type="text/javascript" src="js/mediaFize.js"></script>
+<script type="text/javascript" src="js/base.js"></script>
+<script type="text/javascript" src="js/auth.js"></script>
+<script type="text/javascript" src="js/share.js"></script>
+<script type="text/javascript" src="js/product.js"></script>
+
+<!--微信分享-->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/share.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var share_user_id = CookiesInfo.get('user_id') || anyi.auth.user.user_id;
+    var share_user_id_url = share_user_id ? '?parent_id=' + share_user_id : '';
+    var share_nickname = anyi.auth.user.nickname || JSON.parse(decodeURIComponent(CookiesInfo.get('wxuserinfoDecode'))).nickname;
+    var share_title = '好友正在风险管家签单赚佣金，线上时代已经到来，你还在犹豫吗?';
+    if(share_nickname){
+        share_title = share_nickname + '正在风险管家签单赚佣金，线上时代已经到来，你还在犹豫吗?';
+    }
+    anyi.weixin.share({
+        title: share_title,
+        desc: "打破传统保险推广方法，让你更快速，更便捷的签单，百万年薪不是梦",
+        type: "link",
+        link: location.href.substr(0, location.href.lastIndexOf("/") + 1) + 'index.html' + share_user_id_url,
+        imgUrl: location.href.substr(0, location.href.lastIndexOf("/") + 1) +'images/share_icon_0.png',
+        dataUrl: "",
+        success: function () {
+            MtaH5.clickStat("1100");
+        },
+        cancel: function () {
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="applicable-device" content="mobile">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <link rel="stylesheet" type="text/css" href="css/base_wap.css"/>
+    <script>
+        var _mtac = {"performanceMonitor":1,"senseQuery":1};
+        (function() {
+            var mta = document.createElement("script");
+            mta.src = "http://pingjs.qq.com/h5/stats.js?v2.0.4";
+            mta.setAttribute("name", "MTAH5");
+            mta.setAttribute("sid", "500545841");
+            mta.setAttribute("cid", "500545842");
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(mta, s);
+        })();
+    </script>
+
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/swiper.min.js"></script>
+    <script type="text/javascript" src="js/base.js"></script>
+    <!--<script type="text/javascript" src="js/auth.js"></script>-->
+    <script type="text/javascript" src="js/product.js"></script>
+
+    <style>
+        .llll {
+            text-align: center;
+            font-size: 18px;
+
+            /* Center slide text vertically */
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+    </style>
+    <script>
+        (function(){
+            var order_id = urlHrefObject.order_id || '';
+
+            var arrData = {'order_id': order_id};
+
+            $('.ajax-loading').show();
+            $.ajax({
+                url: hostsUrl2 + "/ws_activity/haoyoutuijian/user_insure",
+                type: "post",
+                data: arrData,
+                dataType: "json",
+                success: function(data){
+                    $('.ajax-loading').hide();
+                    if(data.cord == '0'){
+                        location.href = 'success.html';
+                    } else{
+                        showMaskEditCom({
+                            text: data.msg,
+                            duration: 5500
+                        });
+                    }
+                },
+                error: function(){
+                    $('.ajax-loading').hide();
+                    showMaskEditCom({
+                        text: '网络异常:user_insure',
+                        duration: 5500
+                    });
+                }
+            });
+        })();
+    </script>
+</head>
+<body>
+<div class="popmask"></div>
+<div class="ajax-loading"></div>
+<p class="llll">正在跳转...</p>
+</body>
+</html>
